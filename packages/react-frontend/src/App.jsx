@@ -1,17 +1,17 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, BrowserRouter } from "react-router-dom";
 import AppRoutes from "./routes/AppRoutes";
 import Navbar from "./components/Navbar";
 
 function App() {
   return (
-    <Router>
+    <BrowserRouter basename="/PuppyScheduling">
       <Navbar />
       <Routes>
         {/* All other routes */}
         <Route path="/*" element={<AppRoutes />} />
       </Routes>
-    </Router>
+    </BrowserRouter>
   );
 }
 
