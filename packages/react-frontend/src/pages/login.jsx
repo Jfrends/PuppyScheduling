@@ -20,11 +20,16 @@ import { FaUserAlt, FaLock } from "react-icons/fa";
 
 import { useNavigate } from "react-router-dom";
 
+import { useContext } from "react";
+import { AuthContext } from "../contexts/AuthContext";
+
 const CFaUserAlt = chakra(FaUserAlt);
 const CFaLock = chakra(FaLock);
 
 function Login() {
-  const navigate = new useNavigate();
+  const navigate = useNavigate();
+
+  const { login } = useContext(AuthContext);
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -75,6 +80,7 @@ function Login() {
       }
 
       const data = await response.json();
+      login(data.token);
       console.log("User logged in successfully:", data);
 
       // Display success message
@@ -180,7 +186,6 @@ function Login() {
                 backgroundColor="green.700"
                 color="white"
                 width="full"
-                onClick={handleSubmit}
                 isLoading={loading}
               >
                 Login

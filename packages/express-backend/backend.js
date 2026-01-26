@@ -8,8 +8,6 @@ import eventServices from "./api/event-services.js";
 import dotenv from "dotenv";
 import authFunctions from "./auth.js";
 
-// Testing yo
-
 const app = express();
 const port = 8000;
 app.use(cors());
@@ -71,6 +69,20 @@ app.get("/users/:id", authFunctions.authenticateUser, (req, res) => {
     .catch((error) => {
       console.log("error getting user: ", error);
       res.status(500).send("Internal server error.");
+    });
+});
+
+app.get("/users/:id/events", authFunctions.authenticateUser, (req, res) => {
+  userServices
+    .getUserSchedules(req.user.sub, req.params.id)
+    .then((events) => {
+      // log events
+      console.log("Events for user:", req.params.id, events || []);
+      res.json(events || []);
+    })
+    .catch((error) => {
+      res.status(500).send("Internal server error");
+      console.error("Error getting user events:", error);
     });
 });
 
@@ -159,8 +171,8 @@ app.post("/groups", (req, res) => {
   console.log("Adding group:", groupToAdd);
   groupServices
     .addGroup(groupToAdd)
-    .then(() => {
-      res.status(201).send();
+    .then((createdGroup) => {
+      res.status(201).send(createdGroup);
     })
     .catch((error) => {
       res.status(500).send("Internal server error.");
@@ -220,6 +232,27 @@ app.get("/groups/:id", (req, res) => {
     });
 });
 
+app.get("/:userId/groups", (req, res) => {
+  const { userId } = req.params;
+
+  userServices
+    .findUserById(userId)
+    .then((user) => {
+      if (!user) {
+        return res.status(404).send("User not found.");
+      }
+      const groupIds = user.groups_in.map((group) => group.toString());
+      return Promise.all(groupIds.map((id) => groupServices.findGroupById(id)));
+    })
+    .then((groups) => {
+      res.json({ groups_list: groups });
+    })
+    .catch((error) => {
+      console.error("Error fetching user's groups:", error);
+      res.status(500).send("Internal server error.");
+    });
+});
+
 app.delete("/groups/:id", (req, res) => {
   const { id } = req.params;
 
@@ -265,6 +298,25 @@ app.post("/events", (req, res) => {
     .catch((error) => {
       res.status(500).send("Internal server error.");
       console.error("Error adding event:", error);
+    });
+});
+
+// Create a new event for a user
+app.post("/users/:id/events", authFunctions.authenticateUser, (req, res) => {
+  const userId = req.params.id;
+  const eventData = req.body;
+
+  console.log("Creating event for user:", userId, eventData);
+
+  userServices
+    .addEventToUser(req.user.sub, userId, eventData)
+    .then((result) => {
+      console.log("Event created successfully:", result);
+      res.status(201).json(result);
+    })
+    .catch((error) => {
+      console.error("Error creating event:", error);
+      res.status(500).json({ error: "Internal server error" });
     });
 });
 
@@ -338,6 +390,32 @@ app.delete("/events/:id", (req, res) => {
       res.status(500).send("Internal server error.");
     });
 });
+
+// Delete an event
+app.delete(
+  "/users/:id/events/:eventId",
+  authFunctions.authenticateUser,
+  (req, res) => {
+    const { id: userId, eventId } = req.params;
+
+    console.log("Deleting event:", eventId, "for user:", userId);
+
+    userServices
+      .deleteUserEvent(req.user.sub, userId, eventId)
+      .then((result) => {
+        if (result) {
+          console.log("Event deleted successfully");
+          res.status(204).send();
+        } else {
+          res.status(404).json({ error: "Event not found" });
+        }
+      })
+      .catch((error) => {
+        console.error("Error deleting event:", error);
+        res.status(500).json({ error: "Internal server error" });
+      });
+  },
+);
 
 // login route from auth TA 4
 app.post("/login", authFunctions.loginUser);

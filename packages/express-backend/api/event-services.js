@@ -29,6 +29,7 @@ function updateEventById(id, update) {
 function findEventByIdAndDelete(id) {
   return eventModel.findByIdAndDelete(id);
 }
+
 export default {
   addEvent,
   getEvents,

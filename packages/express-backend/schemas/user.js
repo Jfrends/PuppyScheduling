@@ -1,5 +1,14 @@
 import mongoose, { Schema } from "mongoose";
 
+const eventSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  day: { type: String, required: true },
+  start_time: { type: Number, required: true },
+  end_time: { type: Number, required: true },
+  location: { type: String, required: true },
+  can_sit: { type: Boolean, default: true },
+});
+
 const UserSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -22,7 +31,7 @@ const UserSchema = new mongoose.Schema({
   },
   schedule: [
     {
-      type: Schema.Types.ObjectId,
+      type: eventSchema,
       ref: "Event",
       required: true,
     },
