@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "jest",
+    "deploy": "gh-pages -d dist",
     "test:coverage": "jest --coverage"
   },
   "dependencies": {

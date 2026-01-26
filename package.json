@@ -7,7 +7,6 @@
     "dev": "npm run dev --workspace react-frontend",
     "start": "node packages/express-backend/backend.js",
     "test": "npx jest --passWithNoTests",
-    "deploy": "gh-pages -d dist",
     "prepare": "if [ \"$CI\" != \"true\" ]; then husky install; fi"
   },
   "author": "",
