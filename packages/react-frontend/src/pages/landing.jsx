@@ -31,19 +31,19 @@ export default function Landing() {
               <>
                 <Button
                   as={RouterLink}
-                  to={`/${userId}/schedule`}
+                  to={`/login`}
                   colorScheme="green"
                   size="lg"
                 >
-                  Schedule
+                  Login
                 </Button>
                 <Button
                   as={RouterLink}
-                  to={`/${userId}/groups`}
+                  to={`/signup`}
                   colorScheme="green"
                   size="lg"
                 >
-                  Groups
+                  Sign Up
                 </Button>
               </>
             ) : (
