@@ -1,4 +1,6 @@
 import React from "react";
+import { Link as ChakraLink } from "@chakra-ui/react";
+import { Link as RouterLink } from "react-router-dom";
 import { useState } from "react";
 import {
   Flex,
@@ -196,9 +198,9 @@ function Login() {
       </Stack>
       <Box>
         New to us?{" "}
-        <Link color="green.700" href="/signup">
+        <ChakraLink as={RouterLink} to="/signup" color="green.700">
           Sign Up
-        </Link>
+        </ChakraLink>
       </Box>
     </Flex>
   );
