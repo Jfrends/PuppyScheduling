@@ -3,18 +3,15 @@ name: Deploy Frontend to GitHub Pages
 on:
   push:
     branches: ["main"]
-    # Target only frontend changes to save build time
     paths:
       - 'packages/react-frontend/**'
   workflow_dispatch:
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Allow one concurrent deployment
 concurrency:
   group: "pages"
   cancel-in-progress: true
@@ -22,10 +19,6 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        # Tells the action to run commands inside your frontend folder
-        working-directory: ./packages/react-frontend
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -33,15 +26,16 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24 # Updated to 24 to fix the deprecation warning
           cache: 'npm'
-          cache-dependency-path: './packages/react-frontend/package-lock.json'
+          # Removed the manual cache path so it correctly finds the root package-lock.json
 
       - name: Install dependencies
         run: npm ci
 
       - name: Build project
-        run: npm run build
+        # Uses your working workspace command
+        run: npm run -w packages/react-frontend build
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
