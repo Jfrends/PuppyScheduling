@@ -9,7 +9,6 @@ import {
   InputLeftElement,
   chakra,
   Box,
-  Link,
   Avatar,
   FormControl,
   InputRightElement,
@@ -207,14 +206,9 @@ function Signup() {
         </Box>
       </Stack>
       <Box>
-        <Link
-          color="green.700"
-          href="/login"
-          display="flex"
-          alignItems="center"
-        >
-          <CFaArrowLeft /> Back to Login
-        </Link>
+        <ChakraLink as={RouterLink} to="/signup" color="green.700">
+          Back to Login
+        </ChakraLink>
       </Box>
     </Flex>
   );
