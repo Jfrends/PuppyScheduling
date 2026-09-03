@@ -14,6 +14,8 @@ import {
   InputRightElement,
   Text,
 } from "@chakra-ui/react";
+import { Link as ChakraLink } from "@chakra-ui/react";
+import { Link as RouterLink } from "react-router-dom";
 import { FaUserAlt, FaArrowLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
@@ -206,7 +208,7 @@ function Signup() {
         </Box>
       </Stack>
       <Box>
-        <ChakraLink as={RouterLink} to="/signup" color="green.700">
+        <ChakraLink as={RouterLink} to="/login" color="green.700">
           Back to Login
         </ChakraLink>
       </Box>
